@@ -1,8 +1,6 @@
 import React from 'react';
-import { ShieldCheck, Database } from 'lucide-react';
-import { isSupabaseConfigured } from '../lib/supabase';
 
-export default function Header({ currentView, setCurrentView, onOpenTrackModal }) {
+export default function Header({ currentView, setCurrentView }) {
   return (
     <header>
       <div className="container nav-bar">
@@ -14,6 +12,7 @@ export default function Header({ currentView, setCurrentView, onOpenTrackModal }
             setCurrentView('beranda');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
+          aria-label="SIPENAS - Beranda"
         >
           <img src="./logo-sman11.jpg" alt="Logo SMAN 11 Semarang" className="sch-logo" />
           <img src="./logo-sipenas.png" alt="Logo SIPENAS" className="sip-logo" />
@@ -27,37 +26,13 @@ export default function Header({ currentView, setCurrentView, onOpenTrackModal }
               setCurrentView('beranda');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            style={{ background: 'none', border: 'none' }}
           >
             Beranda
           </button>
 
           <button 
             type="button"
-            className="nav-link"
-            onClick={() => {
-              setCurrentView('beranda');
-              setTimeout(() => {
-                document.getElementById('cara-kerja')?.scrollIntoView({ behavior: 'smooth' });
-              }, 50);
-            }}
-            style={{ background: 'none', border: 'none' }}
-          >
-            Alur Laporan
-          </button>
-
-          <button 
-            type="button"
-            className="nav-link"
-            onClick={onOpenTrackModal}
-            style={{ background: 'none', border: 'none' }}
-          >
-            Cek Tiket
-          </button>
-
-          <button 
-            type="button"
-            className="btn btn-sm"
+            className={`nav-link ${currentView === 'aduan' ? 'active' : ''}`}
             onClick={() => {
               setCurrentView('aduan');
               window.scrollTo({ top: 0, behavior: 'smooth' });

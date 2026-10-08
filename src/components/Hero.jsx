@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Search, ArrowRight, Shield, Send } from 'lucide-react';
 
 export default function Hero({ onGoToForm, onTrackTicket }) {
   const [ticketInput, setTicketInput] = useState('');
@@ -14,38 +13,43 @@ export default function Hero({ onGoToForm, onTrackTicket }) {
   return (
     <section className="hero">
       <div className="container">
-        <div className="hero-badge">
-          <span className="pulse-dot"></span>
-          <span>Sistem Aduan Siswa Aktif & Siap Digunakan</span>
+        <img 
+          src="./logo-sipenas.png" 
+          alt="Logo SIPENAS" 
+          className="hero-logo" 
+        />
+
+        <div>
+          <span className="badge">
+            <span className="pulse-dot"></span>
+            Sistem Aduan Aktif &amp; Siap Digunakan
+          </span>
         </div>
 
-        <h1>
-          Suarakan. <span>Kami Dengar.</span>
-        </h1>
+        <h1>Suarakan. Kami Dengar.</h1>
 
         <p className="hero-desc">
-          Platform resmi pengaduan dan aspirasi siswa SMAN 11 Semarang. Laporkan masalah, 
-          beri masukan, dan bantu ciptakan lingkungan sekolah yang aman dan nyaman.
+          Platform resmi pengaduan siswa SMAN 11 Semarang. Laporkan masalah, beri masukan, dan bantu ciptakan lingkungan sekolah yang lebih baik.
         </p>
 
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div>
           <button className="btn" onClick={onGoToForm}>
-            <Send size={18} />
             Buat Aduan Sekarang
           </button>
         </div>
 
-        <form onSubmit={handleTrackSubmit} className="track-box" style={{ margin: '32px auto 0' }}>
-          <Search size={18} color="#94a3b8" />
+        <form onSubmit={handleTrackSubmit} className="track">
+          <span className="track-label">Sudah punya tiket laporan?</span>
           <input 
+            id="tiketCek"
             type="text"
-            className="track-input"
-            placeholder="Punya tiket laporan? (cth: SIP-2026-AB123)"
+            className="track-input-field"
+            placeholder="Masukkan nomor tiket"
             value={ticketInput}
             onChange={(e) => setTicketInput(e.target.value)}
           />
-          <button type="submit" className="btn btn-sm">
-            Lacak
+          <button type="submit" className="btn alt">
+            Cek Status
           </button>
         </form>
       </div>

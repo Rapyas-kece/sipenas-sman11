@@ -6,8 +6,6 @@ import CekTiketModal from './components/CekTiketModal';
 import CaraKerja from './components/CaraKerja';
 import Privasi from './components/Privasi';
 import Footer from './components/Footer';
-import { isSupabaseConfigured } from './lib/supabase';
-import { Send, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('beranda');
@@ -29,7 +27,6 @@ export default function App() {
       <Header 
         currentView={currentView} 
         setCurrentView={setCurrentView}
-        onOpenTrackModal={() => handleOpenTrack()}
       />
 
       <main>
@@ -47,32 +44,23 @@ export default function App() {
             <Privasi />
 
             {/* CTA Section */}
-            <section style={{ padding: '40px 20px' }}>
-              <div className="container" style={{
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)',
-                color: '#fff',
-                borderRadius: 'var(--radius-lg)',
-                padding: '48px 32px',
-                textAlign: 'center',
-                boxShadow: 'var(--shadow-md)',
-              }}>
-                <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '12px' }}>
-                  Siap untuk Membuat Laporan?
-                </h2>
-                <p style={{ maxWidth: '520px', margin: '0 auto 24px', opacity: 0.9 }}>
-                  Jangan ragu untuk menyampaikan aspirasi Anda demi terciptanya lingkungan belajar SMAN 11 Semarang yang lebih baik.
-                </p>
-                <button 
-                  className="btn" 
-                  onClick={() => {
-                    setCurrentView('aduan');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  style={{ background: '#fff', color: 'var(--brand-dark)' }}
-                >
-                  <Send size={18} />
-                  Buat Laporan Sekarang
-                </button>
+            <section className="cta-container">
+              <div className="container">
+                <div className="cta-box">
+                  <h2>Siap untuk Membuat Laporan?</h2>
+                  <p>
+                    Jangan ragu untuk menyampaikan aspirasi Anda demi SMAN 11 Semarang yang lebih baik.
+                  </p>
+                  <button 
+                    className="btn btn-cta" 
+                    onClick={() => {
+                      setCurrentView('aduan');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                  >
+                    Buat Laporan
+                  </button>
+                </div>
               </div>
             </section>
           </>

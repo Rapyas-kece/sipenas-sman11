@@ -1,52 +1,98 @@
 # SIPENAS - Sistem Pengaduan Siswa SMAN 11 Semarang
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![MCP](https://img.shields.io/badge/MCP-Enabled-orange?style=for-the-badge)
 
-Platform resmi pengaduan dan aspirasi bagi siswa/siswi **SMAN 11 Semarang (SMANSE)**. Platform ini memungkinkan siswa untuk menyampaikan keluhan, saran, maupun masukan demi menciptakan lingkungan sekolah yang lebih aman, nyaman, dan transparan.
+Platform resmi pengaduan dan aspirasi bagi siswa/siswi **SMAN 11 Semarang (SMANSE)**. Dibangun menggunakan arsitektur modern **Vite + React 19** dan terintegrasi dengan **Supabase (PostgreSQL & Cloud Media Storage)** untuk menampung keluhan dan bukti foto secara aman dan terenkripsi.
 
 ---
 
-## 🌐 Live Demo & Akses Web
-Aplikasi ini telah di-deploy dan dapat diakses langsung melalui GitHub Pages:
-👉 **[https://rapyas-kece.github.io/sipenas-sman11/](https://rapyas-kece.github.io/sipenas-sman11/)**
+## 🌐 Live Akses & Repositori
+* **Repositori GitHub:** [https://github.com/Rapyas-kece/sipenas-sman11](https://github.com/Rapyas-kece/sipenas-sman11)
+* **Live Website:** [https://rapyas-kece.github.io/sipenas-sman11/](https://rapyas-kece.github.io/sipenas-sman11/) *(atau Vercel: `sipenas-sman11.vercel.app`)*
 
 ---
 
 ## ✨ Fitur Utama
-1. **Layanan Aduan Siswa:** Formulir pelaporan terstruktur mencakup Nama, NIS, Kelas, Judul, Isi Aduan, dan lampiran Foto Bukti.
-2. **Opsi Anonimitas:** Siswa dapat memilih mode anonim untuk menyembunyikan Nama & NIS demi menjaga privasi dan keamanan pelapor.
-3. **Pelacakan Tiket:** Dilengkapi fitur cek status laporan menggunakan kode tiket aduan unik.
-4. **Alur Pelaporan Jelas:** Panduan langkah alur kerja pelaporan (Lapor ➔ Review ➔ Tindak Lanjut).
-5. **Desain Responsif & Modern:** Tampilan ringan, cepat, dan nyaman digunakan baik di smartphone maupun desktop.
+1. **Formulir Pengaduan Interaktif:**
+   - Input Nama, NIS, Kelas, Judul, dan Isi Aduan.
+   - Opsi Anonimitas Penuh (sembunyikan identitas Nama & NIS).
+   - Upload Foto Bukti dengan live image preview dan validasi ukuran (maks. 5MB).
+   - Animasi konfeti perayaan & nomor tiket unik otomatis (contoh: `SIP-2026-X89AB`) yang bisa langsung disalin.
+2. **Pelacakan Status Tiket Real-time:**
+   - Siswa dapat melacak perkembangan penanganan laporan secara transparan.
+   - Indikator status: *Menunggu Review*, *Sedang Direview*, *Sedang Ditindaklanjuti*, *Selesai*.
+   - Menampilkan tanggapan resmi dari pihak sekolah/guru BK.
+3. **Database & Storage (Supabase):**
+   - Tabel database relasional `pengaduan` dengan proteksi Row Level Security (RLS).
+   - Cloud Storage Bucket `bukti-aduan` untuk menyimpan gambar barang/fasilitas yang diadukan.
+   - Dilengkapi *Smart Local Fallback* sehingga aplikasi tetap dapat berjalan lancar offline maupun saat proses setup kredensial cloud.
+4. **Monitoring Database via MCP (Model Context Protocol):**
+   - Konfigurasi server MCP Postgres/Supabase telah ditambahkan ke Antigravity IDE untuk pemantauan tabel dan query langsung dari AI assistant.
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
-- **Frontend:** HTML5, Modern Vanilla CSS, Vanilla JavaScript
-- **Assets:** Inline SVG & Optimized Base64 Images
-- **Hosting / Deployment:** GitHub Pages
+## 📁 Struktur Direktori Proyek
+```text
+smanse_web/
+├── public/                 # Aset publik statis (Logo SMAN 11, Logo SIPENAS)
+├── src/
+│   ├── components/         # Komponen UI modular
+│   │   ├── Header.jsx      # Navigasi & logo
+│   │   ├── Hero.jsx        # Headline & quick track box
+│   │   ├── FormAduan.jsx   # Form keluhan siswa + upload bukti + confetti
+│   │   ├── CekTiketModal.jsx # Modal pelacakan tiket real-time
+│   │   ├── CaraKerja.jsx   # Edukasi 3 langkah alur pengaduan
+│   │   ├── Privasi.jsx     # Jaminan privasi dan kerahasiaan
+│   │   └── Footer.jsx      # Footer resmi sekolah
+│   ├── lib/
+│   │   └── supabase.js     # Supabase client SDK & fallback local DB
+│   ├── App.jsx             # Root layout & routing sederhana
+│   ├── index.css           # Sistem desain modern, variables & animasi
+│   └── main.jsx            # Entry point React
+├── supabase/
+│   └── schema.sql          # Skrip SQL tabel, indeks, RLS, & storage bucket
+├── .env.example            # Contoh variabel lingkungan Supabase
+├── vite.config.js          # Konfigurasi build Vite
+└── package.json            # Daftar dependensi (React 19, Supabase, Lucide, Confetti)
+```
 
 ---
 
-## 🚀 Cara Menjalankan Secara Lokal
-1. Clone repositori ini:
+## 🚀 Panduan Setup & Menjalankan Lokal
+
+1. **Clone repositori:**
    ```bash
    git clone https://github.com/Rapyas-kece/sipenas-sman11.git
-   ```
-2. Masuk ke direktori:
-   ```bash
    cd sipenas-sman11
    ```
-3. Buka file `index.html` langsung di browser favorit Anda:
+
+2. **Install dependensi:**
    ```bash
-   start index.html
+   npm install
    ```
+
+3. **Jalankan development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Koneksikan ke Cloud Supabase (Opsional tapi Direkomendasikan):**
+   - Buat project baru di [supabase.com](https://supabase.com).
+   - Masuk ke menu **SQL Editor**, buka file `supabase/schema.sql` dan jalankan (*Run*).
+   - Salin **Project URL** dan **Anon API Key** dari *Project Settings -> API*.
+   - Buat file `.env` dan masukkan:
+     ```env
+     VITE_SUPABASE_URL=https://your-project.supabase.co
+     VITE_SUPABASE_ANON_KEY=your-anon-key
+     ```
+   - Restart dev server (`npm run dev`). Aplikasi kini terhubung langsung ke cloud database!
 
 ---
 
-## 👤 Author & Pengembang
-- **GitHub:** [@Rapyas-kece](https://github.com/Rapyas-kece)
-- **Sekolah / Lembaga:** SMAN 11 Semarang
+## 👤 Pengembang & Hak Cipta
+- **Pengembang:** [@Rapyas-kece](https://github.com/Rapyas-kece)
+- **Instansi:** SMAN 11 Semarang (SMANSE)

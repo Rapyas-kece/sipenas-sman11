@@ -12,49 +12,56 @@ Platform resmi pengaduan dan aspirasi bagi siswa/siswi **SMAN 11 Semarang (SMANS
 
 ## 🌐 Live Akses & Repositori
 * **Repositori GitHub:** [https://github.com/Rapyas-kece/sipenas-sman11](https://github.com/Rapyas-kece/sipenas-sman11)
-* **Live Website:** [https://rapyas-kece.github.io/sipenas-sman11/](https://rapyas-kece.github.io/sipenas-sman11/) *(atau Vercel: `sipenas-sman11.vercel.app`)*
+* **Website Pengaduan Siswa:** [https://rapyas-kece.github.io/sipenas-sman11/](https://rapyas-kece.github.io/sipenas-sman11/)
+* **Portal Khusus Guru BK & Admin:** [https://rapyas-kece.github.io/sipenas-sman11/admin.html](https://rapyas-kece.github.io/sipenas-sman11/admin.html) *(PIN Default: `smanse11`)*
 
 ---
 
 ## ✨ Fitur Utama
-1. **Formulir Pengaduan Interaktif:**
-   - Input Nama, NIS, Kelas, Judul, dan Isi Aduan.
-   - Opsi Anonimitas Penuh (sembunyikan identitas Nama & NIS).
-   - Upload Foto Bukti dengan live image preview dan validasi ukuran (maks. 5MB).
-   - Notifikasi sukses ramah & animasi konfeti setelah aduan terkirim.
-2. **Alur Pengaduan Langsung & Aman:**
-   - Keluhan langsung masuk ke sistem admin sekolah/guru BK tanpa birokrasi rumit.
-   - Kerahasiaan data siswa terlindungi dan tersimpan secara terenkripsi.
-3. **Database & Storage (Supabase):**
-   - Tabel database relasional `pengaduan` dengan proteksi Row Level Security (RLS).
-   - Cloud Storage Bucket `bukti-aduan` untuk menyimpan gambar barang/fasilitas yang diadukan.
-   - Dilengkapi *Smart Local Fallback* sehingga aplikasi tetap dapat berjalan lancar offline maupun saat proses setup kredensial cloud.
-4. **Monitoring Database via MCP (Model Context Protocol):**
-   - Konfigurasi server MCP Postgres/Supabase telah ditambahkan ke Antigravity IDE untuk pemantauan tabel dan query langsung dari AI assistant.
+1. **Formulir Pengaduan Siswa (Website Publik):**
+   - Halaman bersih khusus siswa (`index.html`) tanpa tombol atau akses admin terlihat.
+   - Input Nama, NIS, Kelas, Judul, dan Isi Aduan dengan opsi Anonimitas Penuh.
+   - Upload Foto Bukti dengan preview gambar dan validasi ukuran (maks. 5MB).
+   - Animasi konfeti perayaan & notifikasi ramah setelah aduan terkirim.
+2. **Portal Terpisah Guru BK & Admin (`admin.html`):**
+   - Halaman terpisah khusus pihak sekolah dengan proteksi PIN keamanan (`smanse11`).
+   - Kartu statistik (KPI): Total Aduan, Menunggu Respon, Sedang Diproses, Selesai Ditangani.
+   - Pencarian instan dan filter multi-kategori (berdasarkan tingkat kelas X/XI/XII dan status aduan).
+   - Modal detail keluhan dengan pratinjau foto resolusi penuh.
+   - Fitur update status penanganan & input catatan/tanggapan guru BK.
+   - Fitur **Export ke Excel / CSV** untuk pembuatan laporan berkas pengaduan sekolah.
+3. **Database & Cloud Storage (Supabase):**
+   - Tabel PostgreSQL `public.pengaduan` dengan proteksi Row Level Security (RLS).
+   - Storage Bucket `bukti-aduan` untuk menyimpan file gambar bukti secara aman.
+   - Terintegrasi langsung dengan Supabase Cloud & dilengkapi local fallback.
 
 ---
 
 ## 📁 Struktur Direktori Proyek
 ```text
 smanse_web/
-├── public/                 # Aset publik statis (Logo SMAN 11, Logo SIPENAS)
+├── public/                 # Aset statis (Logo SMAN 11, Logo SIPENAS)
 ├── src/
 │   ├── components/         # Komponen UI modular
-│   │   ├── Header.jsx      # Navigasi & logo
+│   │   ├── Header.jsx      # Navigasi siswa (Beranda & Buat Aduan)
 │   │   ├── Hero.jsx        # Headline & logo SIPENAS resmi
-│   │   ├── FormAduan.jsx   # Form keluhan siswa + upload bukti + confetti
-│   │   ├── CaraKerja.jsx   # Edukasi 3 langkah alur pengaduan
+│   │   ├── FormAduan.jsx   # Form aduan siswa + upload bukti + confetti
+│   │   ├── AdminDashboard.jsx # Dashboard rekap aduan, filter, & export guru BK
+│   │   ├── CaraKerja.jsx   # Alur pengaduan 3 langkah
 │   │   ├── Privasi.jsx     # Jaminan privasi dan kerahasiaan
 │   │   └── Footer.jsx      # Footer resmi sekolah
 │   ├── lib/
-│   │   └── supabase.js     # Supabase client SDK & fallback local DB
-│   ├── App.jsx             # Root layout & navigasi
+│   │   └── supabase.js     # Supabase client SDK & API helper admin
+│   ├── App.jsx             # Root layout web siswa
+│   ├── admin.jsx           # Entry point halaman portal admin guru
 │   ├── index.css           # Sistem desain modern, variables & animasi
-│   └── main.jsx            # Entry point React
+│   └── main.jsx            # Entry point web siswa
+├── admin.html              # Halaman terpisah khusus Guru BK & Admin
+├── index.html              # Halaman utama web siswa
 ├── supabase/
-│   └── schema.sql          # Skrip SQL tabel, indeks, RLS, & storage bucket
+│   └── schema.sql          # Skrip SQL tabel, RLS, & storage bucket
 ├── .env.example            # Contoh variabel lingkungan Supabase
-├── vite.config.js          # Konfigurasi build Vite
+├── vite.config.js          # Konfigurasi multi-page build Vite
 └── package.json            # Daftar dependensi (React 19, Supabase, Lucide, Confetti)
 ```
 

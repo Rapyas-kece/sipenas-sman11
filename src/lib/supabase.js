@@ -132,3 +132,95 @@ export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileF
     isCloud: false,
   };
 }
+
+/**
+ * Mengambil semua data pengaduan untuk Portal Guru BK / Admin
+ */
+export async function getSemuaAduan() {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('pengaduan')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.warn('Gagal fetch dari Supabase, fallback ke local:', error.message);
+        return getLocalDb();
+      }
+      return data || [];
+    } catch (e) {
+      console.warn('Exception saat fetch Supabase:', e);
+      return getLocalDb();
+    }
+  }
+  return getLocalDb();
+}
+
+/**
+ * Memperbarui status aduan & catatan tanggapan guru BK
+ */
+export async function updateStatusAduan(id, status, tanggapan = '') {
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('pengaduan')
+        .update({
+          status,
+          tanggapan,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select();
+
+      if (!error && data && data.length > 0) {
+        return { success: true, data: data[0] };
+      }
+    } catch (e) {
+      console.warn('Update cloud error:', e);
+    }
+  }
+
+  // Update in local database fallback
+  const db = getLocalDb();
+  const idx = db.findIndex((item) => item.id === id);
+  if (idx !== -1) {
+    db[idx].status = status;
+    db[idx].tanggapan = tanggapan;
+    db[idx].updated_at = new Date().toISOString();
+    saveLocalDb(db);
+    return { success: true, data: db[idx] };
+  }
+  return { success: true };
+}
+
+/**
+ * Mengunduh seluruh rekap aduan dalam format CSV (kompatibel dengan Microsoft Excel)
+ */
+export function exportAduanToCSV(data) {
+  if (!data || data.length === 0) return;
+
+  const headers = ['Waktu', 'Nama Siswa', 'NIS', 'Kelas', 'Anonim', 'Judul', 'Isi Aduan', 'Status', 'Tanggapan Guru', 'Link Foto Bukti'];
+  const rows = data.map((item) => [
+    new Date(item.created_at).toLocaleString('id-ID'),
+    item.is_anonim ? 'Anonim' : (item.nama || '-'),
+    item.is_anonim ? '-' : (item.nis || '-'),
+    item.kelas || '-',
+    item.is_anonim ? 'Ya' : 'Tidak',
+    `"${(item.judul || '').replace(/"/g, '""')}"`,
+    `"${(item.isi || '').replace(/"/g, '""')}"`,
+    item.status || 'menunggu',
+    `"${(item.tanggapan || '').replace(/"/g, '""')}"`,
+    item.foto_url || '-'
+  ]);
+
+  const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `rekap_pengaduan_sipenas_${new Date().toISOString().slice(0, 10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}

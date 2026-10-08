@@ -17,7 +17,7 @@ export default function App() {
       />
 
       <main>
-        {currentView === 'beranda' ? (
+        {currentView === 'beranda' && (
           <>
             <Hero 
               onGoToForm={() => {
@@ -50,7 +50,9 @@ export default function App() {
               </div>
             </section>
           </>
-        ) : (
+        )}
+
+        {currentView === 'aduan' && (
           <FormAduan 
             onBackToHome={() => {
               setCurrentView('beranda');

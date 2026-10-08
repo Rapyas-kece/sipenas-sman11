@@ -35,25 +35,18 @@ function saveLocalDb(data) {
   }
 }
 
-// Generate nomor tiket berformat rapi: SIP-THN-XXXX
-export function generateTicketCode() {
-  const year = new Date().getFullYear();
-  const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
-  return `SIP-${year}-${rand}`;
-}
-
 /**
  * Mengirim data aduan siswa ke Supabase (atau fallback local storage jika belum connect)
  */
 export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileFoto }) {
-  const nomorTiket = generateTicketCode();
+  const internalRef = 'SIP-' + Date.now().toString(36).toUpperCase();
   let fotoUrl = null;
 
   if (isSupabaseConfigured && supabase) {
     // 1. Upload foto ke Supabase Storage (Bucket: bukti-aduan)
     if (fileFoto) {
       const ext = fileFoto.name.split('.').pop();
-      const fileName = `${nomorTiket}_${Date.now()}.${ext}`;
+      const fileName = `${internalRef}_${Date.now()}.${ext}`;
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('bukti-aduan')
@@ -74,7 +67,7 @@ export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileF
 
     // 2. Insert data ke Tabel pengaduan
     const payload = {
-      nomor_tiket: nomorTiket,
+      nomor_tiket: internalRef,
       nama: isAnonim ? 'Anonim' : nama,
       nis: isAnonim ? '-' : nis,
       is_anonim: isAnonim,
@@ -99,7 +92,6 @@ export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileF
 
     return {
       success: true,
-      nomorTiket,
       data,
       isCloud: true,
     };
@@ -117,7 +109,7 @@ export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileF
 
   const record = {
     id: 'local-' + Date.now(),
-    nomor_tiket: nomorTiket,
+    nomor_tiket: internalRef,
     nama: isAnonim ? 'Anonim' : nama,
     nis: isAnonim ? '-' : nis,
     is_anonim: isAnonim,
@@ -126,7 +118,6 @@ export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileF
     isi,
     foto_url: fotoUrl,
     status: 'menunggu',
-    tanggapan: 'Laporan Anda telah diterima oleh sistem dan sedang masuk dalam antrean review tim sekolah.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -137,36 +128,7 @@ export async function kirimAduan({ nama, nis, isAnonim, kelas, judul, isi, fileF
 
   return {
     success: true,
-    nomorTiket,
     data: record,
     isCloud: false,
   };
-}
-
-/**
- * Mencari status aduan berdasarkan nomor tiket
- */
-export async function getStatusAduan(nomorTiket) {
-  const queryTiket = (nomorTiket || '').trim().toUpperCase();
-  if (!queryTiket) {
-    throw new Error('Nomor tiket tidak boleh kosong.');
-  }
-
-  if (isSupabaseConfigured && supabase) {
-    const { data, error } = await supabase
-      .from('pengaduan')
-      .select('*')
-      .eq('nomor_tiket', queryTiket)
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(`Gagal mengambil status: ${error.message}`);
-    }
-    return data;
-  }
-
-  // --- Fallback Local Mock Mode ---
-  const db = getLocalDb();
-  const match = db.find((item) => item.nomor_tiket === queryTiket);
-  return match || null;
 }

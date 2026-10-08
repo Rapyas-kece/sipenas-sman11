@@ -21,11 +21,10 @@ Platform resmi pengaduan dan aspirasi bagi siswa/siswi **SMAN 11 Semarang (SMANS
    - Input Nama, NIS, Kelas, Judul, dan Isi Aduan.
    - Opsi Anonimitas Penuh (sembunyikan identitas Nama & NIS).
    - Upload Foto Bukti dengan live image preview dan validasi ukuran (maks. 5MB).
-   - Animasi konfeti perayaan & nomor tiket unik otomatis (contoh: `SIP-2026-X89AB`) yang bisa langsung disalin.
-2. **Pelacakan Status Tiket Real-time:**
-   - Siswa dapat melacak perkembangan penanganan laporan secara transparan.
-   - Indikator status: *Menunggu Review*, *Sedang Direview*, *Sedang Ditindaklanjuti*, *Selesai*.
-   - Menampilkan tanggapan resmi dari pihak sekolah/guru BK.
+   - Notifikasi sukses ramah & animasi konfeti setelah aduan terkirim.
+2. **Alur Pengaduan Langsung & Aman:**
+   - Keluhan langsung masuk ke sistem admin sekolah/guru BK tanpa birokrasi rumit.
+   - Kerahasiaan data siswa terlindungi dan tersimpan secara terenkripsi.
 3. **Database & Storage (Supabase):**
    - Tabel database relasional `pengaduan` dengan proteksi Row Level Security (RLS).
    - Cloud Storage Bucket `bukti-aduan` untuk menyimpan gambar barang/fasilitas yang diadukan.
@@ -42,15 +41,14 @@ smanse_web/
 ├── src/
 │   ├── components/         # Komponen UI modular
 │   │   ├── Header.jsx      # Navigasi & logo
-│   │   ├── Hero.jsx        # Headline & quick track box
+│   │   ├── Hero.jsx        # Headline & logo SIPENAS resmi
 │   │   ├── FormAduan.jsx   # Form keluhan siswa + upload bukti + confetti
-│   │   ├── CekTiketModal.jsx # Modal pelacakan tiket real-time
 │   │   ├── CaraKerja.jsx   # Edukasi 3 langkah alur pengaduan
 │   │   ├── Privasi.jsx     # Jaminan privasi dan kerahasiaan
 │   │   └── Footer.jsx      # Footer resmi sekolah
 │   ├── lib/
 │   │   └── supabase.js     # Supabase client SDK & fallback local DB
-│   ├── App.jsx             # Root layout & routing sederhana
+│   ├── App.jsx             # Root layout & navigasi
 │   ├── index.css           # Sistem desain modern, variables & animasi
 │   └── main.jsx            # Entry point React
 ├── supabase/

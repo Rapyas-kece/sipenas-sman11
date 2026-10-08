@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Send, UploadCloud, X, CheckCircle, Copy, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Send, UploadCloud, X, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { kirimAduan } from '../lib/supabase';
 
-export default function FormAduan({ onBackToHome, onTrackTicket }) {
+export default function FormAduan({ onBackToHome }) {
   const [nama, setNama] = useState('');
   const [nis, setNis] = useState('');
   const [isAnonim, setIsAnonim] = useState(false);
@@ -15,8 +15,7 @@ export default function FormAduan({ onBackToHome, onTrackTicket }) {
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [hasilTiket, setHasilTiket] = useState(null);
-  const [isCopied, setIsCopied] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -47,7 +46,7 @@ export default function FormAduan({ onBackToHome, onTrackTicket }) {
     setLoading(true);
 
     try {
-      const res = await kirimAduan({
+      await kirimAduan({
         nama,
         nis,
         isAnonim,
@@ -57,10 +56,10 @@ export default function FormAduan({ onBackToHome, onTrackTicket }) {
         fileFoto,
       });
 
-      setHasilTiket(res.nomorTiket);
+      setIsSuccess(true);
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 80,
+        spread: 60,
         origin: { y: 0.6 },
       });
 
@@ -75,14 +74,6 @@ export default function FormAduan({ onBackToHome, onTrackTicket }) {
       setErrorMsg(err.message || 'Terjadi kesalahan saat mengirim aduan.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const copyTiket = () => {
-    if (hasilTiket) {
-      navigator.clipboard.writeText(hasilTiket);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
     }
   };
 
@@ -130,61 +121,37 @@ export default function FormAduan({ onBackToHome, onTrackTicket }) {
           </div>
         )}
 
-        {hasilTiket ? (
+        {isSuccess ? (
           <div style={{
-            background: 'var(--success-light)',
+            background: 'var(--success-bg)',
             border: '1.5px solid #a7f3d0',
             borderRadius: 'var(--radius-lg)',
-            padding: '28px',
+            padding: '32px 24px',
             textAlign: 'center',
             animation: 'fadeIn 0.3s ease',
           }}>
-            <CheckCircle size={48} color="#059669" style={{ margin: '0 auto 12px' }} />
-            <h3 style={{ color: '#065f46', fontSize: '1.4rem', fontWeight: 800 }}>
+            <CheckCircle size={52} color="#059669" style={{ margin: '0 auto 12px' }} />
+            <h3 style={{ color: '#065f46', fontSize: '1.45rem', fontWeight: 800 }}>
               Aduan Berhasil Terkirim!
             </h3>
-            <p style={{ color: '#047857', margin: '8px 0 20px', fontSize: '0.95rem' }}>
-              Simpan dan catat nomor tiket di bawah ini untuk memantau status penyelesaian dari sekolah.
+            <p style={{ color: '#047857', margin: '10px auto 24px', fontSize: '0.95rem', maxWidth: '440px', lineHeight: 1.6 }}>
+              Terima kasih telah bersuara. Laporan Anda telah berhasil diterima oleh sistem dan akan segera ditinjau serta ditindaklanjuti oleh pihak sekolah.
             </p>
-
-            <div style={{
-              background: '#fff',
-              border: '2px dashed #059669',
-              borderRadius: 'var(--radius-md)',
-              padding: '14px 20px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '20px',
-            }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '0.05em', color: '#0f172a' }}>
-                {hasilTiket}
-              </span>
-              <button 
-                type="button" 
-                onClick={copyTiket}
-                className="btn btn-sm"
-                style={{ padding: '6px 12px' }}
-              >
-                <Copy size={14} />
-                {isCopied ? 'Tersalin!' : 'Salin'}
-              </button>
-            </div>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button 
                 type="button" 
-                className="btn btn-secondary"
-                onClick={() => setHasilTiket(null)}
+                className="btn alt"
+                onClick={() => setIsSuccess(false)}
               >
                 Kirim Laporan Lain
               </button>
               <button 
                 type="button" 
                 className="btn"
-                onClick={() => onTrackTicket(hasilTiket)}
+                onClick={onBackToHome}
               >
-                Lihat Status Tiket
+                Kembali ke Beranda
               </button>
             </div>
           </div>

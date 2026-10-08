@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function Hero({ onGoToForm, onTrackTicket }) {
-  const [ticketInput, setTicketInput] = useState('');
-
-  const handleTrackSubmit = (e) => {
-    e.preventDefault();
-    if (ticketInput.trim()) {
-      onTrackTicket(ticketInput.trim());
-    }
-  };
-
+export default function Hero({ onGoToForm }) {
   return (
     <section className="hero">
       <div className="container">
@@ -37,21 +28,6 @@ export default function Hero({ onGoToForm, onTrackTicket }) {
             Buat Aduan Sekarang
           </button>
         </div>
-
-        <form onSubmit={handleTrackSubmit} className="track">
-          <span className="track-label">Sudah punya tiket laporan?</span>
-          <input 
-            id="tiketCek"
-            type="text"
-            className="track-input-field"
-            placeholder="Masukkan nomor tiket"
-            value={ticketInput}
-            onChange={(e) => setTicketInput(e.target.value)}
-          />
-          <button type="submit" className="btn alt">
-            Cek Status
-          </button>
-        </form>
       </div>
     </section>
   );

@@ -2,25 +2,12 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import FormAduan from './components/FormAduan';
-import CekTiketModal from './components/CekTiketModal';
 import CaraKerja from './components/CaraKerja';
 import Privasi from './components/Privasi';
 import Footer from './components/Footer';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('beranda');
-  const [trackModalOpen, setTrackModalOpen] = useState(false);
-  const [activeTicket, setActiveTicket] = useState('');
-
-  const handleOpenTrack = (ticket = '') => {
-    setActiveTicket(ticket);
-    setTrackModalOpen(true);
-  };
-
-  const handleCloseTrack = () => {
-    setTrackModalOpen(false);
-    setActiveTicket('');
-  };
 
   return (
     <div className="app">
@@ -37,7 +24,6 @@ export default function App() {
                 setCurrentView('aduan');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              onTrackTicket={(ticket) => handleOpenTrack(ticket)}
             />
 
             <CaraKerja />
@@ -70,19 +56,11 @@ export default function App() {
               setCurrentView('beranda');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            onTrackTicket={(ticket) => handleOpenTrack(ticket)}
           />
         )}
       </main>
 
       <Footer />
-
-      {trackModalOpen && (
-        <CekTiketModal 
-          initialTicket={activeTicket} 
-          onClose={handleCloseTrack} 
-        />
-      )}
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function CaraKerja() {
     {
       number: '3',
       title: 'Tindak Lanjut',
-      desc: 'Laporan diselesaikan. Anda dapat memantau seluruh riwayat proses dari dashboard Anda.',
+      desc: 'Laporan ditindaklanjuti secara adil dan diselesaikan langsung oleh pihak sekolah demi kenyamanan bersama.',
     },
   ];
 
